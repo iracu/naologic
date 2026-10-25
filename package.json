@@ -1,0 +1,29 @@
+{
+  "name": "naologic-work-order-schedule",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "apps/e2e"
+  ],
+  "engines": {
+    "node": ">=22.22.3 <23",
+    "npm": ">=10 <11"
+  },
+  "packageManager": "npm@10.9.8",
+  "scripts": {
+    "start": "npm run start --workspace=@naologic/web",
+    "build": "npm run build --workspace=@naologic/web",
+    "test": "npm run test --workspace=@naologic/web -- --watch=false",
+    "test:watch": "npm run test --workspace=@naologic/web",
+    "typecheck:e2e": "npm run typecheck --workspace=@naologic/e2e",
+    "e2e": "npm run test --workspace=@naologic/e2e",
+    "e2e:list": "npm run test --workspace=@naologic/e2e -- --list --pass-with-no-tests",
+    "e2e:install": "npm exec --workspace=@naologic/e2e -- playwright install chromium",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "3.8.1"
+  }
+}

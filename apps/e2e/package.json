@@ -1,0 +1,14 @@
+{
+  "name": "@naologic/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "22.19.15",
+    "typescript": "6.0.3"
+  }
+}
