@@ -1,8 +1,9 @@
 # Work Order Schedule Timeline
 
-Repository foundation for the Naologic frontend assessment. The application currently
-renders an unstyled placeholder; timeline, forms, actions, and overlap validation are
-not implemented. The original assignment is in [docs/requirements](docs/requirements/FE-technical-test-10-2026.md).
+Naologic frontend assessment with a Day/Week/Month timeline grid, fixed Work Center
+sidebar, today's indicator, horizontal scrolling, row hover, and date-derived work
+order bars. Bars show status and accessible Edit/Delete menus that emit events only.
+Forms, deletion logic, and overlap validation are not implemented. The original assignment is in [docs/requirements](docs/requirements/FE-technical-test-10-2026.md).
 
 ## Setup
 
@@ -64,10 +65,14 @@ checks configuration and discovery; it does not claim browser coverage.
 │   │       ├── main.ts / index.html / styles.scss
 │   │       └── app
 │   │           ├── app.ts / app.html / app.scss / app.config.ts / app.spec.ts
-│   │           ├── domain/work-order.ts
-│   │           └── data-access
-│   │               ├── sample-data.ts / sample-data.spec.ts
-│   │               └── work-order-data.service.ts
+│   │           └── features/work-order-schedule
+│   │               ├── work-order-schedule.ts / .html / .scss / .spec.ts
+│   │               ├── components
+│   │               │   ├── timeline-grid/ (TS, HTML, SCSS)
+│   │               │   ├── timeline-toolbar/ (TS, HTML, SCSS)
+│   │               │   └── work-order-bar/ (TS, HTML, SCSS, spec)
+│   │               ├── domain/ (models, pure date functions, specs)
+│   │               └── data-access/ (sample data, service, specs)
 │   └── e2e
 │       ├── package.json / playwright.config.ts / tsconfig.json
 │       └── tests/README.md
@@ -105,30 +110,37 @@ mandatory library peer requirements were checked before installing. See
 [ADR 001](docs/decisions/001-project-foundation.md) for compatibility sources and the
 reason the initial Angular 21 candidate was replaced after its audit.
 
+The root App renders the standalone WorkOrderSchedule feature container. Each child
+component keeps its companion files together. The feature owns domain and data-access
+code; no cross-feature core/shared layer is needed. See [ADR 004](docs/decisions/004-feature-organization.md).
+
 Domain types are framework-independent. The local data service exposes readonly signal
 state built from five centers and eight orders with all four statuses. The fixture
 factory accepts an explicit calendar date and uses UTC calendar arithmetic to avoid
-DST shifts; the service anchors fixtures to the user's local day. Components will
+DST shifts; the service anchors fixtures to the user's local day. Components
 consume state and delegate scheduling rules to plain functions. No storage, backend,
 router, global state library, or workspace build orchestrator is needed yet.
 
 ## Verification and remaining work
 
-Verified on Node 22.23.2 / npm 10.9.8:
+Verified on Node 22.23.2 / npm 10.9.8. Install, peer and audit results below are from
+the foundation; build, tests, formatting, and E2E configuration checks were rerun for the feature structure refactor:
 
 | Check                        | Result                                                             |
 | ---------------------------- | ------------------------------------------------------------------ |
 | `npm install`, then `npm ci` | Successful workspace resolution and clean lockfile install         |
 | `npm run build`              | Production build passes                                            |
-| `npm test`                   | 4 tests pass across 2 files                                        |
+| `npm test`                   | 25 tests pass across 6 files                                       |
 | `npm run typecheck:e2e`      | Passes                                                             |
 | `npm run e2e:list`           | Config loads; 0 tests, intentionally no browser scenarios          |
 | `npm run format:check`       | Passes                                                             |
 | `npm ls --all`               | No invalid/missing peer dependencies                               |
 | `npm audit`                  | 2 findings remain: 1 high Vite issue entry and 1 low builder entry |
 
-Initial tests cover application bootstrap and sample-data integrity, date boundaries,
-and invalid anchors. The requirements checklist tracks unimplemented functionality.
+Tests cover sample-data integrity, calendar ranges, leap days, week/month boundaries,
+scroll clamping, today positioning, and ng-select zoom integration. Manual browser
+checks cover Day/Week/Month, fixed sidebar during scrolling, hover colors, and a 390px
+viewport without page overflow. Playwright remains configuration-only.
 
 Audit limitation: Angular build 22.2.4 pins an affected Vite release. `npm audit fix`
 updated undici compatibly but exits nonzero for the remaining Vite/build findings.
@@ -137,10 +149,12 @@ advisories. No force or overrides were used. These are development-tooling findi
 keep the development server local and revisit the builder when a patched compatible
 release is available. This foundation does not have a clean full dependency audit.
 
-Before the next slice, measure the Sketch artboards and record evidence in
-[docs/design](docs/design/README.md). Confirm inclusive/exclusive end-date semantics
-before implementing overlap checks and bar sizing. Then build a static Day timeline
-using the local service, with pure date-to-column calculations and focused tests.
+See [grid measurements](docs/design/timeline-grid.md) and [ADR 002](docs/decisions/002-timeline-grid.md)
+for measured values, responsive adaptations, Monday weeks, and date geometry.
+Exact dropdown styling and automatic midnight rollover are not implemented.
+Bars and menu UI are implemented with inclusive end dates; see
+[bar measurements](docs/design/work-order-bars.md) and [ADR 003](docs/decisions/003-work-order-bars.md).
+Next: implement the Create/Edit panel and connect action events. No create/edit functionality yet.
 
 The directory initially contained no Git repository. No commits or remote publication
 were created. A public repository and Loom demo remain final submission tasks.

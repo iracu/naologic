@@ -1,0 +1,15 @@
+// Desktop offsets from the default Sketch frame; fluid caps keep the grid usable on narrow screens.
+main {
+  margin: 95px min(45px, 3vw) 0 min(101px, 7vw);
+}
+h1 {
+  margin: 0;
+  color: #030929;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 34px;
+}
+app-timeline-toolbar {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}

@@ -1,0 +1,12 @@
+<label for="timeline-scale">Timescale</label>
+<ng-select
+  class="timeline-scale"
+  labelForId="timeline-scale"
+  [items]="scales"
+  bindLabel="label"
+  bindValue="value"
+  [formControl]="control"
+  [clearable]="false"
+  [searchable]="false"
+  (change)="scaleChange.emit(control.value)"
+/>

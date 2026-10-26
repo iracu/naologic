@@ -1,0 +1,10 @@
+<main>
+  <h1>Work Orders</h1>
+  <app-timeline-toolbar (scaleChange)="scale.set($event)" />
+  <app-timeline-grid
+    [centers]="centers()"
+    [orders]="orders()"
+    [columns]="columns()"
+    [today]="today"
+  />
+</main>

@@ -1,0 +1,90 @@
+// Measurements and responsive adaptations: docs/design/02-timeline-grid.md.
+:host {
+  display: block;
+  min-width: 0;
+  --sidebar-width: min(380px, 40vw);
+  --column-width: 114px;
+  --header-height: 34px;
+}
+
+.viewport {
+  overflow-x: auto;
+  border: 1px solid #e6ebf0;
+}
+.canvas {
+  position: relative;
+  width: calc(var(--sidebar-width) + var(--column-count) * var(--column-width));
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+  font-size: 14px;
+  line-height: 17px;
+  color: #030929;
+}
+th,
+td {
+  box-sizing: border-box;
+  width: var(--column-width);
+  padding: 0;
+  border-right: 1px solid #e6ebf0;
+}
+thead th {
+  height: var(--header-height);
+  font-weight: 500;
+  color: #687196;
+  background: #fff;
+}
+.sidebar {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: var(--sidebar-width);
+  text-align: left;
+  padding-inline: min(31px, 3vw);
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+tbody th,
+tbody td {
+  height: 49px;
+  border-top: 1px solid #e6ebf0;
+  font-weight: 500;
+}
+tbody td {
+  background: #f7f9fc;
+}
+tbody tr:hover td {
+  background: #eef0ff;
+}
+tbody tr:hover .sidebar {
+  background: #fafbfd;
+}
+.today {
+  position: absolute;
+  z-index: 1;
+  top: var(--header-height);
+  bottom: 0;
+  left: calc(var(--sidebar-width) + var(--today-position) * var(--column-width));
+  border-left: 3px solid #d4d7ff;
+  pointer-events: none;
+}
+
+.row-track {
+  position: relative;
+  height: 48px;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(var(--column-width) - 1px),
+    #e6ebf0 calc(var(--column-width) - 1px),
+    #e6ebf0 var(--column-width)
+  );
+}
+app-work-order-bar {
+  position: absolute;
+  top: 5px;
+  z-index: 2;
+}

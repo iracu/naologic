@@ -1,0 +1,133 @@
+// Source measurements and compact-bar adaptation: docs/design/work-order-bars.md.
+:host {
+  display: block;
+  container-type: inline-size;
+  height: 38px;
+}
+.bar {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  color: #030929;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  overflow: hidden;
+}
+[data-status='in-progress'] {
+  --background: #edeeff;
+  --border: #dee0ff;
+  --badge: #d6d8ff;
+  --status: #3e40db;
+}
+[data-status='complete'] {
+  --background: #f8fff3;
+  --border: #d1fab3;
+  --badge: #e1ffcc;
+  --status: #08a268;
+}
+[data-status='blocked'] {
+  --background: #fffcf1;
+  --border: #fff5cf;
+  --badge: #fceeb5;
+  --status: #b13600;
+}
+[data-status='open'] {
+  --background: #e4fdff;
+  --border: #cefbff;
+  --badge: #e4fdff;
+  --status: #00b0bf;
+}
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: var(--badge);
+  color: var(--status);
+  white-space: nowrap;
+}
+button {
+  border: 0;
+  cursor: pointer;
+}
+.actions {
+  flex: 0 0 24px;
+  height: 22px;
+  padding: 0;
+  border-radius: 5px;
+  color: #687196;
+  background: transparent;
+  line-height: 18px;
+}
+.actions:hover,
+.actions:focus-visible,
+.actions[aria-expanded='true'] {
+  background: #f1f3f8;
+}
+button:focus-visible {
+  outline: 1px solid #3e40db;
+  outline-offset: -1px;
+}
+.menu {
+  box-sizing: border-box;
+  width: 200px;
+  padding: 11px 0;
+  border: 1px solid rgb(104 113 150 / 10%);
+  border-radius: 5px;
+  background: #fff;
+  box-shadow:
+    0 4.5px 5px -1px #d8dceb,
+    0 2.5px 3px -1.5px #c8cfe9;
+}
+.menu button {
+  display: block;
+  width: 100%;
+  height: 28px;
+  padding: 0 12px;
+  background: transparent;
+  color: #2f3059;
+  text-align: left;
+  font-size: 14px;
+  line-height: 18px;
+}
+.menu .delete {
+  color: #3e40db;
+}
+.menu button:hover,
+.menu button:focus {
+  background: #f1f3f8;
+}
+// Keep exact date geometry at compressed zooms. The named trigger retains all
+// details for assistive technology; its native title exposes them on hover.
+@container (width < 160px) {
+  .badge {
+    display: none;
+  }
+}
+@container (width < 48px) {
+  .bar {
+    padding: 0;
+    gap: 0;
+  }
+  .name {
+    display: none;
+  }
+  .actions {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+}

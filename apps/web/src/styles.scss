@@ -1,2 +1,25 @@
-// Add styles only after measuring the supplied Sketch reference.
-// Bootstrap and ng-select styles will be integrated alongside their controls.
+@use '@angular/cdk/overlay-prebuilt.css';
+@use '@ng-select/ng-select/scss/default.theme';
+
+// Vendor dropdown mechanics; measured control typography overrides below.
+body {
+  margin: 0;
+}
+.timeline-scale {
+  .ng-select-container {
+    color: #3e40db;
+    font-size: 13px;
+    font-weight: 500;
+  }
+}
+
+html {
+  font-family: 'Circular-Std', sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}

@@ -1,7 +1,7 @@
 # Requirements checklist
 
 Source: `docs/requirements/FE-technical-test-10-2026.md`. Checked means implemented,
-not merely installed or planned. UI and submission tasks are intentionally pending.
+not merely installed or planned. Panel, mutation, validation, and submission tasks remain pending.
 
 ## Updating status
 
@@ -22,12 +22,26 @@ The scope of a completed task is distinct from completion of the whole assessmen
 
 ## Timeline and bars
 
-- [ ] Day default plus Week/Month zoom; same data and scale-appropriate headers.
-- [ ] Fixed work-center column and horizontally scrolling timeline.
-- [ ] Today indicator, initial range centered on today, appropriate buffers per zoom.
-- [ ] Measured row hover state and usable narrow-screen layout.
-- [ ] Date-derived bar positions, order names, four status badges, three-dot menus.
+- [x] Day default plus Week/Month zoom; same data and scale-appropriate headers.
+- [x] Fixed work-center column and horizontally scrolling timeline.
+- [x] Today indicator, initial range centered on today, appropriate buffers per zoom.
+- [x] Measured row hover state and usable narrow-screen layout.
+- [x] Date-derived bar positions, order names, four status badges, three-dot menus.
 - [ ] Edit and Delete actions; deletion updates displayed orders.
+
+Feature paths below are relative to `apps/web/src/app/features/work-order-schedule`;
+`app.spec.ts` remains at the application root.
+
+Task 1 evidence: `domain/timeline.spec.ts`, `work-order-schedule.spec.ts`,
+`app.spec.ts`; browser checks at 1280px and 390px confirm centered today, working
+zoom, fixed sidebar under keyboard scroll, matching hover colors, and no page overflow.
+Measurements and visual limitations: `docs/design/timeline-grid.md`.
+
+Task 2 evidence: `domain/work-order-position.spec.ts`, `components/work-order-bar/work-order-bar.spec.ts`,
+`app.spec.ts`, and zoom integration tests. Browser checked Day/Week/Month rendering,
+keyboard menu opening/navigation and Escape focus return. End dates are inclusive.
+Edit/Delete emit events only. Compact bars and unprovided visual states are documented
+in `docs/design/work-order-bars.md`; CRUD integration remains unchecked.
 
 ## Create/edit panel
 

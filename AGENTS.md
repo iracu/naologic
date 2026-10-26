@@ -17,7 +17,7 @@
 
 - Read `docs/requirements/FE-technical-test-10-2026.md` completely before changes. Preserve the original assignment.
 - Consult `tools/agent/requirements-checklist.md` and keep implementation status honest.
-- This foundation contains no timeline UI. Implement features only when requested.
+- The Timeline Grid and Work Order Bars are implemented. Create/Edit panels and data mutations remain out of scope until requested.
 - Measure Sketch before styling. Record source/artboard/state with each measurement in `docs/design`; never invent colors, spacing, dimensions, or typography values.
 - Mandatory requirements precede bonuses. No backend, persistence, state framework, SSR, or extra UI library without a demonstrated requirement.
 - Record significant AI prompts in `docs/ai-prompts` and consequential decisions in short ADRs.
@@ -25,9 +25,10 @@
 ## Architecture
 
 - Use npm workspaces: `apps/web` and `apps/e2e`; maintain one root lockfile.
-- `apps/web/src/app/domain` contains framework-independent TypeScript models and future pure scheduling rules. No Angular, DOM, storage, or component imports here.
-- `data-access` owns local in-memory data and exposes readonly state. Components must not mutate fixtures or service state directly.
+- `apps/web/src/app/features/work-order-schedule/domain` contains framework-independent TypeScript models and future pure scheduling rules. No Angular, DOM, storage, or component imports here.
+- Feature-local `data-access` owns local in-memory data and exposes readonly state. Components must not mutate fixtures or service state directly.
 - Components coordinate inputs, events, forms, and presentation; move date math and validation rules into pure functions with explicit inputs.
+- Keep schedule components in `features/work-order-schedule`, with each child component and its companion files in a dedicated folder. Keep the root App a thin shell. Add `core` or `shared` only for demonstrated cross-feature needs.
 - Keep feature components small. Extract abstractions only when they have a concrete caller or repeated use.
 
 ## Angular and code quality

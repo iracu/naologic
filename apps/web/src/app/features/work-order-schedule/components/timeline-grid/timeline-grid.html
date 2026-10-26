@@ -1,0 +1,50 @@
+<div
+  #viewport
+  class="viewport"
+  tabindex="0"
+  role="region"
+  aria-label="Work center timeline, scroll horizontally to explore dates"
+>
+  <div class="canvas" [style.--column-count]="columns().length">
+    <table aria-label="Work center schedule">
+      <thead>
+        <tr>
+          <th scope="col" class="sidebar">Work Center</th>
+          @for (column of columns(); track column.start) {
+            <th scope="col" [attr.data-date]="column.start" [attr.title]="column.start">
+              {{ column.label }}
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.center.docId) {
+          <tr>
+            <th scope="row" class="sidebar">{{ row.center.data.name }}</th>
+            <td [attr.colspan]="columns().length">
+              <div class="row-track">
+                @for (bar of row.bars; track bar.order.docId) {
+                  <app-work-order-bar
+                    [order]="bar.order"
+                    [style.left]="'calc(' + bar.position.start + ' * var(--column-width))'"
+                    [style.width]="'calc(' + bar.position.width + ' * var(--column-width))'"
+                    (action)="orderAction.emit($event)"
+                  />
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (todayPosition() !== null) {
+      <div
+        class="today"
+        role="img"
+        [attr.aria-label]="'Today, ' + today()"
+        [attr.title]="'Today, ' + today()"
+        [style.--today-position]="todayPosition()"
+      ></div>
+    }
+  </div>
+</div>

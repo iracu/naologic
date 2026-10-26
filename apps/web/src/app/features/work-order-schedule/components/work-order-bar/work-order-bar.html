@@ -1,0 +1,32 @@
+<div class="bar" [attr.data-status]="order().data.status" [title]="description()">
+  <span class="name">{{ order().data.name }}</span>
+  <span class="badge">{{ statusLabel() }}</span>
+  <button
+    type="button"
+    class="actions"
+    [attr.aria-label]="'Actions for ' + description()"
+    [cdkMenuTriggerFor]="menu"
+    [cdkMenuPosition]="menuPositions"
+  >
+    <span aria-hidden="true">···</span>
+  </button>
+</div>
+<ng-template #menu>
+  <div cdkMenu class="menu" [attr.aria-label]="'Actions for ' + order().data.name">
+    <button
+      type="button"
+      cdkMenuItem
+      (cdkMenuItemTriggered)="action.emit({ type: 'edit', orderId: order().docId })"
+    >
+      Edit
+    </button>
+    <button
+      type="button"
+      cdkMenuItem
+      class="delete"
+      (cdkMenuItemTriggered)="action.emit({ type: 'delete', orderId: order().docId })"
+    >
+      Delete
+    </button>
+  </div>
+</ng-template>
