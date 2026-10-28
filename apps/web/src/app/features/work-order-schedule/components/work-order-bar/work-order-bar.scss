@@ -1,3 +1,5 @@
+@use '../../../../../styles/colors' as colors;
+
 // Source measurements and compact-bar adaptation: docs/design/work-order-bars.md.
 :host {
   display: block;
@@ -14,35 +16,35 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--background);
-  color: #030929;
+  color: colors.$text-primary;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 18px;
   overflow: hidden;
 }
 [data-status='in-progress'] {
-  --background: #edeeff;
-  --border: #dee0ff;
-  --badge: #d6d8ff;
-  --status: #3e40db;
+  --background: #{colors.$status-in-progress-bg};
+  --border: #{colors.$status-in-progress-border};
+  --badge: #{colors.$status-in-progress-badge-bg};
+  --status: #{colors.$accent};
 }
 [data-status='complete'] {
-  --background: #f8fff3;
-  --border: #d1fab3;
-  --badge: #e1ffcc;
-  --status: #08a268;
+  --background: #{colors.$status-complete-bg};
+  --border: #{colors.$status-complete-border};
+  --badge: #{colors.$status-complete-badge-bg};
+  --status: #{colors.$status-complete-text};
 }
 [data-status='blocked'] {
-  --background: #fffcf1;
-  --border: #fff5cf;
-  --badge: #fceeb5;
-  --status: #b13600;
+  --background: #{colors.$status-blocked-bg};
+  --border: #{colors.$status-blocked-border};
+  --badge: #{colors.$status-blocked-badge-bg};
+  --status: #{colors.$status-blocked-text};
 }
 [data-status='open'] {
-  --background: #e4fdff;
-  --border: #cefbff;
-  --badge: #e4fdff;
-  --status: #00b0bf;
+  --background: #{colors.$status-open-bg};
+  --border: #{colors.$status-open-border};
+  --badge: #{colors.$status-open-bg};
+  --status: #{colors.$status-open-text};
 }
 .name {
   flex: 1;
@@ -52,6 +54,7 @@
   white-space: nowrap;
 }
 .badge {
+  font-weight: 400;
   flex-shrink: 0;
   padding: 2px 8px;
   border-radius: 5px;
@@ -68,47 +71,48 @@ button {
   height: 22px;
   padding: 0;
   border-radius: 5px;
-  color: #687196;
-  background: transparent;
+  color: colors.$text-muted;
+  background: colors.$surface-hover;
   line-height: 18px;
 }
 .actions:hover,
 .actions:focus-visible,
 .actions[aria-expanded='true'] {
-  background: #f1f3f8;
+  background: colors.$control-border;
 }
 button:focus-visible {
-  outline: 1px solid #3e40db;
+  outline: 1px solid colors.$accent;
   outline-offset: -1px;
 }
 .menu {
   box-sizing: border-box;
   width: 200px;
   padding: 11px 0;
-  border: 1px solid rgb(104 113 150 / 10%);
+  border: 1px solid colors.$menu-border;
   border-radius: 5px;
-  background: #fff;
+  background: colors.$surface;
   box-shadow:
-    0 4.5px 5px -1px #d8dceb,
-    0 2.5px 3px -1.5px #c8cfe9;
+    0 4.5px 5px -1px colors.$control-border,
+    0 2.5px 3px -1.5px colors.$shadow-soft;
 }
 .menu button {
   display: block;
   width: 100%;
   height: 28px;
   padding: 0 12px;
-  background: transparent;
-  color: #2f3059;
+  background: colors.$transparent;
+  color: colors.$text-secondary;
   text-align: left;
+  font-weight: 500;
   font-size: 14px;
   line-height: 18px;
 }
 .menu .delete {
-  color: #3e40db;
+  color: colors.$accent;
 }
 .menu button:hover,
 .menu button:focus {
-  background: #f1f3f8;
+  background: colors.$surface-hover;
 }
 // Keep exact date geometry at compressed zooms. The named trigger retains all
 // details for assistive technology; its native title exposes them on hover.
@@ -129,5 +133,24 @@ button:focus-visible {
     flex: 1;
     min-width: 0;
     overflow: hidden;
+  }
+}
+
+// Sketch exposes the actions on hover; keyboard focus and touch retain access.
+@media (hover: hover) and (pointer: fine) {
+  .actions {
+    opacity: 0;
+  }
+  .bar:hover .actions,
+  .bar:focus-within .actions,
+  .actions[aria-expanded='true'] {
+    opacity: 1;
+  }
+}
+
+// Compact bars keep a visible actions affordance without changing date geometry.
+@container (width < 160px) {
+  .actions {
+    opacity: 1;
   }
 }

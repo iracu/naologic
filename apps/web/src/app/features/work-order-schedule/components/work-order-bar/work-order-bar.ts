@@ -1,19 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import { WorkOrderDocument, WorkOrderStatus } from '../../domain/work-order';
+import { WorkOrderDocument, STATUS_LABELS } from '../../domain/work-order';
 
 export interface WorkOrderAction {
   readonly type: 'edit' | 'delete';
   readonly orderId: string;
 }
-
-const STATUS_LABELS: Record<WorkOrderStatus, string> = {
-  open: 'Open',
-  'in-progress': 'In Progress',
-  complete: 'Complete',
-  blocked: 'Blocked',
-};
 
 @Component({
   selector: 'app-work-order-bar',

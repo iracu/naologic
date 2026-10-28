@@ -56,3 +56,17 @@ describe('timeline calendar geometry', () => {
     expect(centeredScrollLeft(50, 800, 200, 100)).toBe(0);
   });
 });
+
+describe('extended calendar ranges', () => {
+  it.each(['day', 'week', 'month'] as const)(
+    'extends %s without gaps or shifting existing columns',
+    (scale) => {
+      const original = createTimelineColumns('2024-02-29', scale);
+      const extended = createTimelineColumns('2024-02-29', scale, 6, 8);
+      expect(extended.slice(6, 6 + original.length)).toEqual(original);
+      for (let index = 1; index < extended.length; index++) {
+        expect(extended[index - 1].end).toBe(extended[index].start);
+      }
+    },
+  );
+});

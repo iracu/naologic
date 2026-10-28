@@ -1,3 +1,5 @@
+@use 'styles/colors' as colors;
+
 @use '@angular/cdk/overlay-prebuilt.css';
 @use '@ng-select/ng-select/scss/default.theme';
 
@@ -5,11 +7,49 @@
 body {
   margin: 0;
 }
-.timeline-scale {
+// Scoped ng-select internals: measured closed Timescale control.
+.timeline-scale.ng-select {
+  width: 71px;
   .ng-select-container {
-    color: #3e40db;
+    height: 25px;
+    min-height: 25px;
+    border: 0;
+    border-radius: 0 5px 5px 0;
+    background: colors.$surface;
+    box-shadow: none;
+    color: colors.$accent;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
+    line-height: 16px;
+    .ng-value-container {
+      padding-left: 8px;
+      .ng-input {
+        top: 0;
+        padding-left: 8px;
+        padding-right: 23px;
+      }
+    }
+  }
+  .ng-arrow-wrapper {
+    width: 23px;
+    padding-right: 8px;
+    .ng-arrow {
+      top: 0;
+      width: 8.465px;
+      height: 5px;
+      border: 0;
+      background: colors.$text-muted;
+      clip-path: polygon(0 0, 50% 63%, 100% 0, 100% 15%, 50% 100%, 0 15%);
+    }
+  }
+  &.ng-select-opened .ng-arrow {
+    transform: rotate(180deg);
+  }
+  &.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    border: 0;
+    box-shadow: none;
+    outline: 2px solid colors.$action-primary;
+    outline-offset: 1px;
   }
 }
 
@@ -22,4 +62,138 @@ input,
 select,
 textarea {
   font-family: inherit;
+}
+
+// Scoped vendor integration: the calendar popup has no supplied Sketch state.
+.work-order-panel {
+  .ng-select .ng-select-container {
+    height: 38px;
+    min-height: 38px;
+    border: 1px solid colors.$control-border;
+    border-radius: 5px;
+    font-size: 14px;
+    color: colors.$text-primary;
+  }
+  ngb-datepicker {
+    --bs-border-color: #{colors.$control-border};
+    --bs-tertiary-bg: #{colors.$surface-hover};
+    --bs-text-muted: #{colors.$text-muted};
+    background: colors.$surface;
+    z-index: 1;
+    font-size: 14px;
+    box-shadow: 0 1px 3px colors.$shadow-soft;
+    .bg-primary {
+      background-color: colors.$action-primary;
+      color: colors.$surface;
+    }
+    .form-select {
+      background: colors.$surface;
+      color: colors.$text-primary;
+      border: 1px solid colors.$control-border;
+    }
+    .btn-link {
+      color: colors.$accent;
+      cursor: pointer;
+    }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+}
+
+.work-order-panel ngb-datepicker {
+  [ngbdatepickerdayview]:focus-visible,
+  button:focus-visible,
+  select:focus-visible {
+    outline: 2px solid colors.$action-primary;
+    outline-offset: -2px;
+  }
+}
+
+// Expanded controls measured in View Selection and Status Dropdown artboards.
+.cdk-overlay-pane .ng-dropdown-panel.timeline-scale-menu,
+.work-order-panel .ng-dropdown-panel {
+  box-sizing: border-box;
+  padding: 11px 0;
+  border: 1px solid colors.$menu-border;
+  border-radius: 5px;
+  background: colors.$surface;
+  box-shadow:
+    0 4.5px 5px -1px colors.$control-border,
+    0 2.5px 3px -1.5px colors.$shadow-soft;
+  &.ng-select-bottom {
+    margin-top: 5px;
+  }
+  &.ng-select-top {
+    margin-bottom: 5px;
+  }
+  .ng-dropdown-panel-items .ng-option {
+    box-sizing: border-box;
+    height: 28px;
+    padding: 5px 12px;
+    color: colors.$text-secondary;
+    background: colors.$surface;
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 500;
+    &.ng-option-selected {
+      color: colors.$accent;
+    }
+    &.ng-option-marked {
+      background: colors.$surface-hover;
+    }
+    &.ng-option-selected .ng-option-label,
+    .ng-option-label {
+      font-weight: 500;
+    }
+  }
+}
+.cdk-overlay-pane .ng-dropdown-panel.timeline-scale-menu {
+  // The CDK pane is only as wide as the 71px trigger; prevent flex shrinking.
+  width: 200px;
+  flex-shrink: 0;
+  left: -75px;
+}
+.work-order-panel .order-status.ng-select {
+  .ng-select-container {
+    box-shadow:
+      0 1px 0.5px -1px colors.$control-border,
+      0 1.5px 3px -1.5px colors.$shadow-soft;
+    .ng-value-container {
+      padding-left: 8px;
+    }
+  }
+  &.ng-select-opened > .ng-select-container,
+  &.ng-select-focused > .ng-select-container {
+    border-radius: 5px;
+    border-color: colors.$field-active-border;
+    outline: 2px solid colors.$field-active-border;
+    outline-offset: -2px;
+  }
+  .ng-arrow-wrapper {
+    width: 24px;
+    padding-right: 8px;
+    .ng-arrow {
+      border-width: 5px 4px 0;
+      border-top-color: colors.$text-muted;
+    }
+  }
+  &.ng-select-opened .ng-arrow {
+    top: 0;
+    transform: rotate(180deg);
+  }
+}
+
+// Shared modal placeholder color, including inputs rendered by ng-select.
+.work-order-panel input::placeholder {
+  color: colors.$text-placeholder;
+  opacity: 1;
+}
+.work-order-panel .ng-select .ng-placeholder {
+  color: colors.$text-placeholder;
 }

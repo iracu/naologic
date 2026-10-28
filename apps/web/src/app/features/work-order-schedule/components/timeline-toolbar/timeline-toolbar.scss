@@ -1,10 +1,42 @@
+@use '../../../../../styles/colors' as colors;
+
 :host {
   display: flex;
   align-items: center;
   width: fit-content;
-  color: #687196;
+  color: colors.$text-muted;
   font-size: 13px;
 }
+// Default artboard measurements: docs/design/timeline-grid.md.
+.timescale-control {
+  display: flex;
+  width: 146px;
+  height: 25px;
+  border-radius: 5px;
+  background: colors.$surface;
+  box-shadow: 1px 2.5px 3px -1.5px colors.$shadow-soft;
+}
 label {
+  box-sizing: border-box;
+  flex: 0 0 75px;
+  padding: 4px 8px 5px;
+  border-radius: 5px 0 0 5px;
+  background: colors.$timescale-label-bg;
+  font-weight: 500;
   line-height: 16px;
+}
+
+button {
+  margin-left: 8px;
+  height: 25px;
+  padding: 0 8px;
+  border: 1px solid colors.$control-border;
+  border-radius: 7px;
+  background: colors.$surface;
+  color: colors.$text-secondary;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: 2px solid colors.$action-primary;
+  outline-offset: 1px;
 }

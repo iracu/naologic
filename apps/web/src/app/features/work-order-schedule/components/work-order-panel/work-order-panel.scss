@@ -1,0 +1,179 @@
+@use '../../../../../styles/colors' as colors;
+
+// Measurements and documented adaptations: docs/design/work-order-panel.md.
+dialog {
+  position: fixed;
+  inset: 0 0 0 auto;
+  box-sizing: border-box;
+  width: 591px;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: colors.$surface;
+  color: colors.$text-primary;
+  overflow-y: auto;
+  border-radius: 12px 0 0 12px;
+  box-shadow:
+    0 4.5px 5px -1px colors.$control-border,
+    0 2.5px 3px -1.5px colors.$shadow-soft,
+    0 5px 15px colors.$control-border;
+}
+dialog[open] {
+  animation: slide-in 180ms ease-out;
+}
+dialog::backdrop {
+  background: colors.$modal-backdrop;
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  dialog[open] {
+    animation: none;
+  }
+}
+header {
+  position: relative;
+  padding: 16px 24px;
+  border-bottom: 1px solid colors.$divider;
+}
+h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 25px;
+}
+header p {
+  font-weight: 500;
+  margin: 5px 0 0;
+  color: colors.$text-muted;
+  font-size: 16px;
+  line-height: 20px;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  right: 24px;
+  top: 25px;
+}
+button {
+  cursor: pointer;
+}
+.actions button {
+  font-weight: 500;
+  height: 32px;
+  min-width: 66px;
+  padding: 0 8px;
+  border: 1px solid colors.$surface;
+  border-radius: 7px;
+  background: colors.$surface;
+  color: colors.$text-secondary;
+  box-shadow: 0 1px 3px colors.$shadow-soft;
+  font-size: 15px;
+}
+.actions .primary {
+  background: colors.$action-primary;
+  border-color: colors.$action-primary;
+  color: colors.$surface;
+}
+.fields {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+label {
+  font-size: 14px;
+  line-height: 16px;
+  color: colors.$text-muted;
+}
+input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 38px;
+  border: 1px solid colors.$control-border;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 14px;
+  color: colors.$text-primary;
+  background: colors.$surface;
+  box-shadow:
+    0 1px 0.5px -1px colors.$control-border,
+    0 1.5px 3px -1.5px colors.$shadow-soft;
+}
+input:focus {
+  border-color: colors.$field-active-border;
+  outline: 2px solid colors.$field-active-border;
+  outline-offset: -2px;
+}
+button:focus-visible {
+  outline: 2px solid colors.$action-primary;
+  outline-offset: 1px;
+}
+.date-control {
+  position: relative;
+}
+.date-control input {
+  padding-right: 38px;
+}
+.date-control button {
+  position: absolute;
+  right: 8px;
+  top: 0;
+  height: 38px;
+  border: 0;
+  background: colors.$transparent;
+  color: colors.$text-muted;
+}
+.error {
+  margin: 0;
+  color: colors.$status-blocked-text;
+  font-size: 14px;
+  line-height: 18px;
+}
+.error:empty {
+  display: none;
+}
+@media (max-width: 590px) {
+  .actions {
+    position: static;
+    margin-top: 16px;
+    justify-content: flex-end;
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 16px;
+  background: colors.$status-open-bg;
+  color: colors.$status-open-text;
+  &[data-status='in-progress'] {
+    background: colors.$status-in-progress-badge-bg;
+    color: colors.$accent;
+  }
+  &[data-status='complete'] {
+    background: colors.$status-complete-badge-bg;
+    color: colors.$status-complete-text;
+  }
+  &[data-status='blocked'] {
+    background: colors.$status-blocked-badge-bg;
+    color: colors.$status-blocked-text;
+  }
+}

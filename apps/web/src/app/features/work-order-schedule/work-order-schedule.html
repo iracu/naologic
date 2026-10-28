@@ -1,10 +1,21 @@
 <main>
   <h1>Work Orders</h1>
-  <app-timeline-toolbar (scaleChange)="scale.set($event)" />
+  <app-timeline-toolbar (scaleChange)="changeScale($event)" (todayRequested)="goToToday()" />
+  @if (persistenceWarning(); as warning) {
+    <p role="status" aria-label="Order persistence">{{ warning }}</p>
+  }
   <app-timeline-grid
     [centers]="centers()"
     [orders]="orders()"
     [columns]="columns()"
-    [today]="today"
+    [today]="today()"
+    [scale]="scale()"
+    (extendRange)="extendRange($event)"
+    (createOrder)="openCreate($event)"
+    (orderAction)="handleOrderAction($event)"
   />
 </main>
+
+@if (panelContext(); as context) {
+  <app-work-order-panel [context]="context" (dismissed)="closePanel()" />
+}

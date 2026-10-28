@@ -23,3 +23,10 @@ export interface ScheduleData {
   readonly workCenters: readonly WorkCenterDocument[];
   readonly workOrders: readonly WorkOrderDocument[];
 }
+
+export const STATUS_LABELS: Record<WorkOrderStatus, string> = {
+  open: 'Open',
+  'in-progress': 'In Progress',
+  complete: 'Complete',
+  blocked: 'Blocked',
+};

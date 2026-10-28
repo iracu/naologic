@@ -17,7 +17,7 @@
 
 - Read `docs/requirements/FE-technical-test-10-2026.md` completely before changes. Preserve the original assignment.
 - Consult `tools/agent/requirements-checklist.md` and keep implementation status honest.
-- The Timeline Grid and Work Order Bars are implemented. Create/Edit panels and data mutations remain out of scope until requested.
+- The Timeline Grid, Work Order Bars, Create/Edit Panel, and Delete interactions are implemented. Additional features remain out of scope until requested.
 - Measure Sketch before styling. Record source/artboard/state with each measurement in `docs/design`; never invent colors, spacing, dimensions, or typography values.
 - Mandatory requirements precede bonuses. No backend, persistence, state framework, SSR, or extra UI library without a demonstrated requirement.
 - Record significant AI prompts in `docs/ai-prompts` and consequential decisions in short ADRs.
@@ -45,7 +45,7 @@
 
 - Run `npm run format:check`, `npm run build`, `npm test`, `npm run typecheck:e2e`, and `npm run e2e:list` for foundation changes.
 - Add meaningful tests for date boundaries, leap years, DST, overlap, edit exclusion, and form validation as those behaviors are implemented.
-- Playwright is configuration-only initially. Add user-observable scenarios with features; never present empty discovery as a passing browser suite.
+- Maintain focused Playwright interaction scenarios as features change; never present test discovery as a passing browser suite.
 - Use semantic elements, accessible names, explicit form labels, and errors associated with fields. Do not convey status through color alone.
 - When the panel exists, manage initial focus and focus return; provide keyboard-operable menus, visible focus, and a close mechanism. Verify horizontal scrolling at narrow widths.
 - Do not add snapshots or tests that merely duplicate implementation details.

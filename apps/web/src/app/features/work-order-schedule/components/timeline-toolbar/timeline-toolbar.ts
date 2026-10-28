@@ -11,8 +11,9 @@ import { TimelineScale } from '../../domain/timeline';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimelineToolbar {
+  readonly todayRequested = output<void>();
   readonly scaleChange = output<TimelineScale>();
-  readonly control = new FormControl<TimelineScale>('day', { nonNullable: true });
+  readonly control = new FormControl<TimelineScale>('month', { nonNullable: true });
   readonly scales = [
     { value: 'day', label: 'Day' },
     { value: 'week', label: 'Week' },

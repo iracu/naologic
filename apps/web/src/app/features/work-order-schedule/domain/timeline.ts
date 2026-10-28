@@ -42,6 +42,8 @@ export function addCalendarDays(value: string, days: number): string {
 export function createTimelineColumns(
   today: string,
   scale: TimelineScale,
+  extraBefore = 0,
+  extraAfter = 0,
 ): readonly TimelineColumn[] {
   const anchor = parseDate(today);
   const radius = scale === 'day' ? 14 : scale === 'week' ? 9 : 6;
@@ -58,9 +60,9 @@ export function createTimelineColumns(
     month: 'short',
     ...(scale === 'month' ? { year: 'numeric' } : { day: 'numeric' }),
   });
-  return Array.from({ length: radius * 2 + 1 }, (_, index) => {
-    const start = boundary(index - radius);
-    const end = boundary(index - radius + 1);
+  return Array.from({ length: radius * 2 + 1 + extraBefore + extraAfter }, (_, index) => {
+    const start = boundary(index - radius - extraBefore);
+    const end = boundary(index - radius - extraBefore + 1);
     const label = formatter.format(parseDate(start));
     return { start, end, label: scale === 'week' ? `Week of ${label}` : label };
   });
@@ -121,4 +123,28 @@ export function workOrderBarPosition(
   const start = boundaryPosition(startTime);
   const end = boundaryPosition(endTime);
   return end > start ? { start, width: end - start } : null;
+}
+
+export function isCalendarDate(value: string): boolean {
+  try {
+    parseDate(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Inverse of bar geometry: floor to the calendar day under a pointer. */
+export function dateAtColumnPosition(
+  position: number,
+  columns: readonly TimelineColumn[],
+): string | null {
+  if (!Number.isFinite(position) || position < 0 || position >= columns.length) return null;
+  const index = Math.floor(position);
+  const column = columns[index];
+  const days = (parseDate(column.end).getTime() - parseDate(column.start).getTime()) / DAY_MS;
+  return addCalendarDays(
+    column.start,
+    Math.min(days - 1, Math.floor((position - index) * days + 1e-9)),
+  );
 }

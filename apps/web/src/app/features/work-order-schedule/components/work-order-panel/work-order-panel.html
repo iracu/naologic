@@ -1,0 +1,120 @@
+<dialog
+  #dialog
+  class="work-order-panel"
+  aria-labelledby="panel-title"
+  aria-describedby="panel-description"
+  (click)="outsideClick($event)"
+  (cancel)="$event.preventDefault(); close()"
+>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <header>
+      <h2 id="panel-title">Work Order Details</h2>
+      <p id="panel-description">Specify the dates, name and status for this order</p>
+      <div class="actions">
+        <button type="button" (click)="close()">Cancel</button>
+        <button type="submit" class="primary" [disabled]="closing()">
+          {{ context().mode === 'edit' ? 'Save' : 'Create' }}
+        </button>
+      </div>
+    </header>
+    <div class="fields">
+      <div class="field">
+        <label for="order-name">Work Order Name</label>
+        <input
+          #nameInput
+          id="order-name"
+          formControlName="name"
+          placeholder="Acme Inc."
+          autocomplete="off"
+          aria-required="true"
+          aria-describedby="name-error"
+          [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+        />
+        <span id="name-error" class="error">
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            Work order name is required.
+          }
+        </span>
+      </div>
+      <div class="field">
+        <label for="order-status">Status</label>
+        <!-- Keep the overlay inside the native modal so its options remain interactive. -->
+        <ng-select
+          class="order-status"
+          labelForId="order-status"
+          appendTo=".work-order-panel"
+          formControlName="status"
+          [items]="statuses"
+          bindLabel="label"
+          bindValue="value"
+          [clearable]="false"
+          [searchable]="false"
+          [inputAttrs]="{ 'aria-required': 'true', 'aria-describedby': 'status-error' }"
+        >
+          <ng-template ng-label-tmp let-item="item">
+            <span class="status-badge" [attr.data-status]="item.value">{{ item.label }}</span>
+          </ng-template>
+        </ng-select>
+        <span id="status-error" class="error">
+          @if (form.controls.status.touched && form.controls.status.invalid) {
+            Status is required.
+          }
+        </span>
+      </div>
+      <div class="field">
+        <label for="order-end">End Date</label>
+        <div class="date-control">
+          <input
+            id="order-end"
+            formControlName="endDate"
+            ngbDatepicker
+            #endPicker="ngbDatepicker"
+            placeholder="MM.DD.YYYY"
+            autocomplete="off"
+            aria-required="true"
+            aria-describedby="end-error create-error"
+            [attr.aria-invalid]="
+              form.controls.endDate.touched &&
+              (form.controls.endDate.invalid || form.hasError('dateRange'))
+            "
+          />
+          <button type="button" aria-label="Choose end date" (click)="endPicker.toggle()">▾</button>
+        </div>
+        <span id="end-error" class="error">
+          @if (form.controls.endDate.touched && form.controls.endDate.invalid) {
+            Enter a valid end date (MM.DD.YYYY).
+          } @else if (form.controls.endDate.touched && form.hasError('dateRange')) {
+            End date must be after start date.
+          }
+        </span>
+      </div>
+      <div class="field">
+        <label for="order-start">Start Date</label>
+        <div class="date-control">
+          <input
+            id="order-start"
+            formControlName="startDate"
+            ngbDatepicker
+            #startPicker="ngbDatepicker"
+            placeholder="MM.DD.YYYY"
+            autocomplete="off"
+            aria-required="true"
+            aria-describedby="start-error create-error"
+            [attr.aria-invalid]="form.controls.startDate.touched && form.controls.startDate.invalid"
+          />
+          <button type="button" aria-label="Choose start date" (click)="startPicker.toggle()">
+            ▾
+          </button>
+        </div>
+        <span id="start-error" class="error">
+          @if (form.controls.startDate.touched && form.controls.startDate.invalid) {
+            Enter a valid start date (MM.DD.YYYY).
+          }
+        </span>
+      </div>
+      @if (error()) {
+        <p id="create-error" class="error" role="alert">{{ error() }}</p>
+      }
+    </div>
+  </form>
+</dialog>

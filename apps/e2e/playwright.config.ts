@@ -7,12 +7,19 @@ export default defineConfig({
   retries: process.env['CI'] ? 2 : 0,
   workers: process.env['CI'] ? 1 : undefined,
   reporter: [['list'], ['html', { open: 'never' }]],
-  use: { baseURL: 'http://127.0.0.1:4200', trace: 'on-first-retry' },
+  use: {
+    baseURL: 'http://127.0.0.1:4202',
+    timezoneId: 'UTC',
+    trace: 'on-first-retry',
+    launchOptions: {
+      slowMo: 800,
+    },
+  },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'npm run start --workspace=@naologic/web -- --host 127.0.0.1 --port 4200',
-    url: 'http://127.0.0.1:4200',
-    reuseExistingServer: !process.env['CI'],
+    command: 'npm run start --workspace=@naologic/web -- --host 127.0.0.1 --port 4202',
+    url: 'http://127.0.0.1:4202',
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 });

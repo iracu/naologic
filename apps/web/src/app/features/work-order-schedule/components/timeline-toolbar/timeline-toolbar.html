@@ -1,12 +1,19 @@
-<label for="timeline-scale">Timescale</label>
-<ng-select
-  class="timeline-scale"
-  labelForId="timeline-scale"
-  [items]="scales"
-  bindLabel="label"
-  bindValue="value"
-  [formControl]="control"
-  [clearable]="false"
-  [searchable]="false"
-  (change)="scaleChange.emit(control.value)"
-/>
+<div class="timescale-control">
+  <label for="timeline-scale">Timescale</label>
+  <ng-select
+    class="timeline-scale"
+    panelClass="timeline-scale-menu"
+    labelForId="timeline-scale"
+    [items]="scales"
+    bindLabel="label"
+    bindValue="value"
+    [formControl]="control"
+    [clearable]="false"
+    [searchable]="false"
+    (change)="scaleChange.emit(control.value)"
+  />
+</div>
+
+<button type="button" (click)="todayRequested.emit()" aria-label="Center timeline on today">
+  Today
+</button>

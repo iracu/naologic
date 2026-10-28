@@ -64,3 +64,30 @@ states are adaptations, not claims of exact Sketch equivalence.
 Visual verification covers the local browser at 1280px, including all zooms and
 expanded menu, plus the menu at 390px (contained in the viewport, no page overflow). No automated pixel-diff or cross-browser visual baseline exists;
 full pixel perfection is not claimed for unprovided compact/Open/focus states.
+
+## Hover correction — 2026-10-27
+
+User clarification: hovering the bar reveals a white actions button; hovering that
+button makes it gray. The bar itself has no hover shadow. Remove the earlier bonus
+shadow adaptation. The local Sketch `Buttons/Alt/Icon Subtle/Hover` master
+`95B8B0A0-F693-4B40-B1F0-4C41C2024502`, rectangle `6D85C75F`, specifies #F1F3F8,
+with no enabled shadow. Its icon group `752E9C60` uses #687196. Use #FFFFFF for the
+revealed button, per the user's clarification. Keyboard focus/open-menu styling
+retains the same gray background and visible focus outline.
+
+The supplied web Inspect links (layerPath fdec2de6 and 546e0e3f) were inaccessible;
+those exact IDs are absent from the downloaded file. Colors above are verified
+against the locally available hover symbol, not claimed as a fresh web inspection.
+
+User color correction: the revealed actions background is #F1F3F8, and direct
+button hover is #D8DCEB. This supersedes the white/light-gray mapping above.
+Keyboard focus and open-menu state use the same darker #D8DCEB treatment.
+
+## Compact details and font mapping after review
+
+Compact bars keep their actions button visible. Per the user correction on
+2026-10-28, the menu contains only Edit and Delete; the additional name, status,
+and date summary has been removed. Order details remain in the bar tooltip and
+accessible action label. This preserves true date widths. Full inline labels still require enough bar
+width. The official font stylesheet maps Book to500, Medium to600, and Regular
+to400; bar names/menu items use Book while badge labels retain Regular.

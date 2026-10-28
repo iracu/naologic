@@ -2,8 +2,9 @@
 
 Naologic frontend assessment with a Day/Week/Month timeline grid, fixed Work Center
 sidebar, today's indicator, horizontal scrolling, row hover, and date-derived work
-order bars. Bars show status and accessible Edit/Delete menus that emit events only.
-Forms, deletion logic, and overlap validation are not implemented. The original assignment is in [docs/requirements](docs/requirements/FE-technical-test-10-2026.md).
+order bars. Bars show status and accessible Edit/Delete menus; Edit opens the shared panel.
+The shared Create/Edit Panel uses typed forms, calendar defaults, and same-center overlap
+validation with edit self-exclusion. Delete removes the selected order through the in-memory service. The original assignment is in [docs/requirements](docs/requirements/FE-technical-test-10-2026.md).
 
 ## Setup
 
@@ -32,23 +33,24 @@ npm exec -- ng serve
 
 Run these from the root:
 
-| Command                 | Purpose                                                                  |
-| ----------------------- | ------------------------------------------------------------------------ |
-| `npm start`             | Angular development server                                               |
-| `npm run build`         | Production build into apps/web/dist/web                                  |
-| `npm test`              | Angular/Vitest unit tests, one run                                       |
-| `npm run test:watch`    | Unit tests in watch mode                                                 |
-| `npm run typecheck:e2e` | Strict TypeScript check of Playwright configuration                      |
-| `npm run e2e:list`      | Load config and list tests; zero tests is intentional here               |
-| `npm run e2e:install`   | Install Chromium when browser scenarios are added                        |
-| `npm run e2e`           | Run future browser scenarios; currently fails because there are no tests |
-| `npm run format:check`  | Check formatting, excluding the untouched assignment                     |
-| `npm run format`        | Format authored files                                                    |
-| `npm audit`             | Inspect dependency advisories                                            |
+| Command                 | Purpose                                              |
+| ----------------------- | ---------------------------------------------------- |
+| `npm start`             | Angular development server                           |
+| `npm run build`         | Production build into apps/web/dist/web              |
+| `npm test`              | Angular/Vitest unit tests, one run                   |
+| `npm run test:watch`    | Unit tests in watch mode                             |
+| `npm run typecheck:e2e` | Strict TypeScript check of Playwright configuration  |
+| `npm run e2e:list`      | List the browser interaction scenarios               |
+| `npm run e2e:install`   | Install the matching Chromium browser once           |
+| `npm run e2e`           | Run Chromium interaction scenarios                   |
+| `npm run format:check`  | Check formatting, excluding the untouched assignment |
+| `npm run format`        | Format authored files                                |
+| `npm audit`             | Inspect dependency advisories                        |
 
-Playwright starts the local app automatically for future test runs. Traces are recorded
-on first retry; HTML reports go to apps/e2e/playwright-report. The foundation only
-checks configuration and discovery; it does not claim browser coverage.
+Playwright starts an isolated app server on port 4202 (keep it free). Run
+`npm run e2e:install` once before `npm run e2e`. Failure traces and HTML reports go
+to apps/e2e/test-results and apps/e2e/playwright-report. Tests use a fixed date and
+fresh in-memory state; they do not affect a developer session on port 4200.
 
 ## Layout
 
@@ -70,7 +72,8 @@ checks configuration and discovery; it does not claim browser coverage.
 │   │               ├── components
 │   │               │   ├── timeline-grid/ (TS, HTML, SCSS)
 │   │               │   ├── timeline-toolbar/ (TS, HTML, SCSS)
-│   │               │   └── work-order-bar/ (TS, HTML, SCSS, spec)
+│   │               │   ├── work-order-bar/ (TS, HTML, SCSS, spec)
+│   │               │   └── work-order-panel/ (TS, HTML, SCSS, spec, date adapter)
 │   │               ├── domain/ (models, pure date functions, specs)
 │   │               └── data-access/ (sample data, service, specs)
 │   └── e2e
@@ -118,21 +121,22 @@ Domain types are framework-independent. The local data service exposes readonly 
 state built from five centers and eight orders with all four statuses. The fixture
 factory accepts an explicit calendar date and uses UTC calendar arithmetic to avoid
 DST shifts; the service anchors fixtures to the user's local day. Components
-consume state and delegate scheduling rules to plain functions. No storage, backend,
-router, global state library, or workspace build orchestrator is needed yet.
+consume state and delegate scheduling rules to plain functions. Versioned localStorage persists validated orders through refreshes. Storage errors retain
+usable in-memory state with a warning. No backend or global state library is used.
 
 ## Verification and remaining work
 
 Verified on Node 22.23.2 / npm 10.9.8. Install, peer and audit results below are from
-the foundation; build, tests, formatting, and E2E configuration checks were rerun for the feature structure refactor:
+the foundation; build, tests, formatting, and E2E configuration checks were rerun for the optional schedule bonuses:
 
 | Check                        | Result                                                             |
 | ---------------------------- | ------------------------------------------------------------------ |
 | `npm install`, then `npm ci` | Successful workspace resolution and clean lockfile install         |
 | `npm run build`              | Production build passes                                            |
-| `npm test`                   | 25 tests pass across 6 files                                       |
+| `npm test`                   | 60 tests pass across 10 files                                      |
 | `npm run typecheck:e2e`      | Passes                                                             |
-| `npm run e2e:list`           | Config loads; 0 tests, intentionally no browser scenarios          |
+| `npm run e2e`                | 17 Chromium interaction tests pass                                 |
+| `npm run e2e:list`           | 17 Chromium scenarios discovered                                   |
 | `npm run format:check`       | Passes                                                             |
 | `npm ls --all`               | No invalid/missing peer dependencies                               |
 | `npm audit`                  | 2 findings remain: 1 high Vite issue entry and 1 low builder entry |
@@ -140,7 +144,7 @@ the foundation; build, tests, formatting, and E2E configuration checks were reru
 Tests cover sample-data integrity, calendar ranges, leap days, week/month boundaries,
 scroll clamping, today positioning, and ng-select zoom integration. Manual browser
 checks cover Day/Week/Month, fixed sidebar during scrolling, hover colors, and a 390px
-viewport without page overflow. Playwright remains configuration-only.
+viewport without page overflow. Playwright covers the interaction flows, including narrow layouts and keyboard focus.
 
 Audit limitation: Angular build 22.2.4 pins an affected Vite release. `npm audit fix`
 updated undici compatibly but exits nonzero for the remaining Vite/build findings.
@@ -154,7 +158,27 @@ for measured values, responsive adaptations, Monday weeks, and date geometry.
 Exact dropdown styling and automatic midnight rollover are not implemented.
 Bars and menu UI are implemented with inclusive end dates; see
 [bar measurements](docs/design/work-order-bars.md) and [ADR 003](docs/decisions/003-work-order-bars.md).
-Next: implement the Create/Edit panel and connect action events. No create/edit functionality yet.
+Create is implemented; see [ADR 005](docs/decisions/005-create-panel.md) and
+[panel measurements](docs/design/work-order-panel.md). Edit is implemented using the same panel; see [ADR 006](docs/decisions/006-edit-panel.md).
+Delete is implemented. See [ADR 007](docs/decisions/007-interaction-verification.md)
+and [browser scenarios](apps/e2e/tests/README.md). Visual polish and submission work
+remain separate from interaction verification.
 
 The directory initially contained no Git repository. No commits or remote publication
 were created. A public repository and Loom demo remain final submission tasks.
+
+## Optional features
+
+Orders persist under localStorage key `naologic.work-orders.v1`. Invalid snapshots fall
+back to samples with a warning; successful mutations replace the snapshot. To reset the
+demo, remove that key in browser storage and reload. Empty schedules are preserved.
+There is no cross-tab synchronization (last write wins).
+
+Scroll toward either boundary to load more dates; prepending preserves the visible
+anchor. Today centers the current day; zoom changes reset the loaded date range.
+Panel entry/exit and bar hover honor reduced motion. Hover titles contain full order
+details. Existing calendar styling uses the measured palette; Sketch provides no open
+calendar state for exact comparison. See [ADR 008](docs/decisions/008-schedule-bonuses.md).
+
+Long exploration accumulates columns without virtualization. Other browser engines,
+screen readers, and pixel-diff verification remain outside the executed coverage.

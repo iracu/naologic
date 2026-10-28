@@ -1,0 +1,14 @@
+@use '../styles/colors' as colors;
+
+// Default Sketch artboard: docs/design/app-header.md.
+.app-header {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding-left: min(101px, 7vw);
+  background: colors.$surface;
+}
+img {
+  display: block;
+}
